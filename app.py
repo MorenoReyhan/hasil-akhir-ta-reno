@@ -10,14 +10,12 @@ from sklearn.metrics import mean_absolute_percentage_error
 # Fungsi untuk memuat model dan scaler, di-cache agar lebih cepat
 @st.cache_resource
 def load_model_and_scaler():
-    """Memuat model Keras dan scaler dari file."""
-    keras.config.enable_unsafe_deserialization()
-    model = tf.keras.models.load_model(
-        "best_model_case_1.h5",
-        compile=False,
-        safe_mode=False
-    )
+    # Memuat model dengan format .keras yang baru dan lebih modern
+    model = tf.keras.models.load_model("model_wti.keras", compile=False, safe_mode=False)
+
+    # Memuat scaler
     scaler_y = joblib.load("scaler_y_case_1.pkl")
+
     return model, scaler_y
 
 # Fungsi untuk memuat dan membersihkan data, di-cache agar lebih cepat
@@ -177,5 +175,6 @@ if st.button("Mulai Forecast"):
         forecast_df['Prediksi Harga WTI (USD)'] = forecast_df['Prediksi Harga WTI (USD)'].map('${:,.2f}'.format)
         
         st.dataframe(forecast_df, use_container_width=True)
+
 
         st.success("✅ Proses forecasting selesai!")
